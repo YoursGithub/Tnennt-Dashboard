@@ -3,7 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 
+
 function Dashboard() {
+
+  const [customerTimePeriod, setCustomerTimePeriod] = useState('Today');
+  const [orderTimePeriod, setOrderTimePeriod] = useState('Today');
+  const [revenueTimePeriod, setRevenueTimePeriod] = useState('Today');
+
+  // Function to get data based on time period (you would implement this)
+  const getDataForTimePeriod = (data, period) => {
+    // This is a placeholder. In a real application, you would fetch or filter data based on the period
+    return data;
+  };
 
   const revenueData = [
     { name: 'Jan', value: 4000 },
@@ -87,7 +98,7 @@ function Dashboard() {
   fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 dark:bg-gray-900 text-white transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
 `}>
   <div className="p-4">
-    <h1 className="text-2xl font-semibold mt-4 mb-6">Dashboard</h1>
+    <h1 className="text-2xl font-semibold mt-4 ml-3 mb-6">TNENNT PANEL     <span className='text-white'>&bull;</span></h1>
     <button 
         onClick={() => setSidebarOpen(false)} 
         className="p-2 rounded-md lg:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
@@ -234,19 +245,35 @@ function Dashboard() {
             
             {/* Dashboard Boxes */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Customers */}
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">Total Customers</h4>
-                <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{dashboardData.customers}</p>
-                <ResponsiveContainer width="100%" height={200}>
-                  <LineChart data={revenueData}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                  </LineChart>
-                </ResponsiveContainer>
+            {/* Customers */}
+            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Total Customers</h4>
+                <select 
+                  value={customerTimePeriod}
+                  onChange={(e) => setCustomerTimePeriod(e.target.value)}
+                  className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:outline-none focus:ring-2 text-white focus:ring-indigo-500"
+                >
+                  <option value="Today">Today</option>
+                  <option value="Yesterday">Yesterday</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Monthly">Monthly</option>
+                  <option value="Yearly">Yearly</option>
+                </select>
               </div>
+              <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                {dashboardData.customers} {/* This should be updated based on the selected period */}
+              </p>
+              <ResponsiveContainer width="100%" height={200}>
+                <LineChart data={getDataForTimePeriod(revenueData, customerTimePeriod)}>
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
 
               {/* Orders */}
               <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
@@ -262,19 +289,34 @@ function Dashboard() {
                 </ResponsiveContainer>
               </div>
 
-              {/* Revenue */}
               <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">Revenue</h4>
-                <p className="text-xl font-bold text-blue-600 dark:text-blue-400">Total: ${dashboardData.revenue.total}</p>
-                <ResponsiveContainer width="100%" height={200}>
-                  <AreaChart data={revenueData}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area type="monotone" dataKey="value" stroke="#8884d8" fill="#8884d8" />
-                  </AreaChart>
-                </ResponsiveContainer>
+              <div className="flex justify-between items-center mb-4">
+                <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Revenue</h4>
+                <select 
+                  value={revenueTimePeriod}
+                  onChange={(e) => setRevenueTimePeriod(e.target.value)}
+                  className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:outline-none focus:ring-2 text-white focus:ring-indigo-500"
+                >
+                  <option value="Today">Today</option>
+                  <option value="Yesterday">Yesterday</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Monthly">Monthly</option>
+                  <option value="Yearly">Yearly</option>
+                </select>
               </div>
+              <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
+                Total: ${dashboardData.revenue.total} {/* This should be updated based on the selected period */}
+              </p>
+              <ResponsiveContainer width="100%" height={200}>
+                <AreaChart data={getDataForTimePeriod(revenueData, revenueTimePeriod)}>
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Area type="monotone" dataKey="value" stroke="#8884d8" fill="#8884d8" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
 
               {/* Products */}
               <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
