@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-
+import MiddlemanSection from './Middleman';
 
 function Dashboard() {
 
   const [customerTimePeriod, setCustomerTimePeriod] = useState('Today');
   const [orderTimePeriod, setOrderTimePeriod] = useState('Today');
   const [revenueTimePeriod, setRevenueTimePeriod] = useState('Today');
+  const [currentSection, setCurrentSection] = useState('dashboard');
 
   // Function to get data based on time period (you would implement this)
   const getDataForTimePeriod = (data, period) => {
@@ -98,7 +99,7 @@ function Dashboard() {
   fixed inset-y-0 left-0 z-50 w-64 bg-gray-800 dark:bg-gray-900 text-white transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
 `}>
   <div className="p-4">
-    <h1 className="text-2xl font-semibold mt-4 ml-3 mb-6">TNENNT PANEL     <span className='text-white'>&bull;</span></h1>
+    <h1 className="text-2xl font-semibold mt-4 ml-5 mb-6">Tnennt Panel     <span className='text-white'>&bull;</span></h1>
     <button 
         onClick={() => setSidebarOpen(false)} 
         className="p-2 rounded-md lg:hidden hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
@@ -108,7 +109,26 @@ function Dashboard() {
         </svg>
       </button>
     <nav>
-      <ul className="space-y-4 mt-20">
+      <ul className="space-y-4 mt-10">
+      <li>
+  <a href="#" className="flex items-center py-2 px-4 rounded hover:bg-gray-700">
+    <svg 
+      className="w-5 h-5 mr-3" 
+      fill="none" 
+      stroke="currentColor" 
+      viewBox="0 0 24 24" 
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        strokeWidth="2" 
+        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6"
+      />
+    </svg>
+    Dashboard
+  </a>
+</li>
         <li>
           <a href="#" className="flex items-center py-2 px-4 rounded hover:bg-gray-700">
             <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -166,13 +186,17 @@ function Dashboard() {
           </a>
         </li>
         <li>
-          <a href="#" className="flex items-center py-2 px-4 rounded hover:bg-gray-700">
-            <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
-            Middlemen
-          </a>
-        </li>
+  <a 
+    href="#" 
+    className="flex items-center py-2 px-4 rounded hover:bg-gray-700"
+    onClick={() => setCurrentSection('middlemen')}
+  >
+    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+    </svg>
+    Middlemen
+  </a>
+</li>
       </ul>
     </nav>
   </div>
@@ -240,6 +264,7 @@ function Dashboard() {
 
         {/* Main content area */}
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 dark:bg-gray-700">
+        {currentSection === 'dashboard' && (
           <div className="container mx-auto px-6 py-8">
             <h3 className="text-gray-700 dark:text-gray-200 text-3xl font-medium mb-6">Dashboard Overview</h3>
             
@@ -331,7 +356,8 @@ function Dashboard() {
               </div>
             </div>
             </div>
-
+ )}
+  {currentSection === 'middlemen' && <MiddlemanSection />}
           {/* Recent Orders Table */}
 <div className="mt-8">
   <h4 className="text-gray-700 border-gray-700 dark:text-gray-200 text-xl font-medium mb-4 ml-7">Recent Orders</h4>
