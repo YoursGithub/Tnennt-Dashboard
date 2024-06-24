@@ -1,7 +1,44 @@
 import React, { useState, useEffect } from 'react';
 // import { useNavigate } from 'react-router-dom';
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
 
 function Dashboard() {
+
+  const revenueData = [
+    { name: 'Jan', value: 4000 },
+    { name: 'Feb', value: 3000 },
+    { name: 'Mar', value: 5000 },
+    { name: 'Apr', value: 4500 },
+    { name: 'May', value: 6000 },
+    { name: 'Jun', value: 5500 },
+  ];
+
+  const orderData = [
+    { name: 'Mon', orders: 120 },
+    { name: 'Tue', orders: 150 },
+    { name: 'Wed', orders: 200 },
+    { name: 'Thu', orders: 180 },
+    { name: 'Fri', orders: 220 },
+    { name: 'Sat', orders: 250 },
+    { name: 'Sun', orders: 190 },
+  ];
+
+  const productData = [
+    { name: 'Electronics', value: 400 },
+    { name: 'Clothing', value: 300 },
+    { name: 'Books', value: 200 },
+    { name: 'Home', value: 100 },
+  ];
+
+  const visitorData = [
+    { name: 'Week 1', visitors: 4000 },
+    { name: 'Week 2', visitors: 3000 },
+    { name: 'Week 3', visitors: 5000 },
+    { name: 'Week 4', visitors: 4500 },
+  ];
+
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 //   const navigate = useNavigate();
@@ -196,52 +233,62 @@ function Dashboard() {
             <h3 className="text-gray-700 dark:text-gray-200 text-3xl font-medium mb-6">Dashboard Overview</h3>
             
             {/* Dashboard Boxes */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Customers */}
               <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                 <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">Total Customers</h4>
                 <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{dashboardData.customers}</p>
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={revenueData}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
 
               {/* Orders */}
               <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                 <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">Total Orders</h4>
                 <p className="text-3xl font-bold text-green-600 dark:text-green-400">{dashboardData.orders}</p>
+                <ResponsiveContainer width="100%" height={200}>
+                  <BarChart data={orderData}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="orders" fill="#82ca9d" />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
 
               {/* Revenue */}
               <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                 <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">Revenue</h4>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Weekly: ${dashboardData.revenue.weekly}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Monthly: ${dashboardData.revenue.monthly}</p>
-                  <p className="text-xl font-bold text-blue-600 dark:text-blue-400">Total: ${dashboardData.revenue.total}</p>
-                </div>
+                <p className="text-xl font-bold text-blue-600 dark:text-blue-400">Total: ${dashboardData.revenue.total}</p>
+                <ResponsiveContainer width="100%" height={200}>
+                  <AreaChart data={revenueData}>
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area type="monotone" dataKey="value" stroke="#8884d8" fill="#8884d8" />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
 
               {/* Products */}
               <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                 <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">Products</h4>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Total Products: {dashboardData.products.total}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Total Quantity: {dashboardData.products.quantity}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Stores: {dashboardData.products.stores}</p>
-                </div>
-              </div>
-
-              {/* Visitors */}
-              <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-                <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">Website Visitors</h4>
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Daily: {dashboardData.visitors.daily}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Weekly: {dashboardData.visitors.weekly}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Monthly: {dashboardData.visitors.monthly}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Yearly: {dashboardData.visitors.yearly}</p>
-                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Total Products: {dashboardData.products.total}</p>
+                <ResponsiveContainer width="100%" height={200}>
+                  <PieChart>
+                    <Pie dataKey="value" data={productData} fill="#8884d8" label />
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
             </div>
-          </div>
-
+            </div>
 
           {/* Recent Orders Table */}
 <div className="mt-8">
