@@ -185,13 +185,13 @@ const Store = () => {
       <p>Domain: {store.storeDomain}</p>
       <p>Location: {store.location}</p>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-        {/* <Button 
+        <Button 
           variant="contained" 
           color="primary" 
           onClick={() => handleStoreClick(index)}
         >
           View
-        </Button> */}
+        </Button>
         <Button 
           variant="contained" 
           color="error" 
