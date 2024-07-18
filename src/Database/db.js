@@ -72,30 +72,4 @@ export async function updateDocument(documentPath, data) {
   }
 }
 
-export async function fetchCartdetails(user) {
-  try {
-    const docRef = doc(db, "Users", user?.id);
-    const docSnap = await getDoc(docRef);
-    const docData = docSnap.data();
 
-    let cartData = docData?.mycart ? JSON.parse(docData.mycart) : [];
-
-    if (cartData.length === 0) {
-      return [];
-    }
-
-    const productDetailsPromises = cartData.map(async (item) => {
-      const productRef = doc(db, "Products", item.productID);
-      const productSnap = await getDoc(productRef);
-      return { ...productSnap.data(), quantity: item.quantity };
-    });
-
-    const productDetails = await Promise.all(productDetailsPromises);
-
-    return productDetails;
-  } catch (error) {
-    throw new Error("Error fetching cart details", error);
-  }
-}
-
-// No need for a separate export statement at the end, as all functions are already exported individually
