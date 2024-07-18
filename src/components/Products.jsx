@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import {
   Box,
@@ -14,9 +14,7 @@ import {
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-
 const Products = () => {
-  const { storeId } = useParams();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
@@ -34,12 +32,14 @@ const Products = () => {
 
   const specialCategories = ['clothing', 'electronics', 'footwear'];
 
+  const location = useLocation();
+  const  storeId  = location?.state?.storeId || null ;
+
   useEffect(() => {
-    const savedProducts = localStorage.getItem(`products_${storeId}`);
-    if (savedProducts) {
-      setProducts(JSON.parse(savedProducts));
-    }
-  }, [storeId]);
+  
+
+
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -80,9 +80,10 @@ const Products = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if( !storeId  ) return alert("No Store Id Found") ;
+
     const updatedProducts = [...products, newProduct];
     setProducts(updatedProducts);
-    localStorage.setItem(`products_${storeId}`, JSON.stringify(updatedProducts));
     setNewProduct({
       image: '',
       category: '',
@@ -100,7 +101,6 @@ const Products = () => {
   const handleDeleteProduct = (index) => {
     const updatedProducts = products.filter((_, i) => i !== index);
     setProducts(updatedProducts);
-    localStorage.setItem(`products_${storeId}`, JSON.stringify(updatedProducts));
   };
 
   const showSizesField = specialCategories.includes(newProduct.category.toLowerCase());

@@ -24,16 +24,11 @@ export const checkEmail = async ( email ) =>{
 
 export const createStore = async ( user , storeDetails) =>{
 
-    console.log(storeDetails , user);
-
     storeDetails.isStoreOpen= true;
     storeDetails.StoreFollowers=[];
      storeDetails.storePhotoURL=user?.photoURL || ''
      storeDetails.userId=user?.id ;
-
-    console.log(storeDetails);
-
-      
+     
   await Promise.all([
           setDocument(`Store/${storeDetails.storeName}`, storeDetails),
           updateDocument(`Users/${user.id}`,{storeName: storeDetails.storeName })

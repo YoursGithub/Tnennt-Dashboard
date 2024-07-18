@@ -54,7 +54,7 @@ const Store = () => {
   };
 
   const handleStoreClick = (storeId) => {
-    navigate(`/products`);
+    navigate('/products', { state: { storeId: storeId.id } });
   };
 
   const handleCreateStore = () => {
@@ -80,7 +80,7 @@ const getAllStores = async () => {
   const result = await getCreatedStores();
   setStores(result); 
 }
-console.log(stores);
+
 
 useEffect(() => {
   getAllStores();
@@ -248,7 +248,7 @@ useEffect(() => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => handleStoreClick(index)}
+                    onClick={() => handleStoreClick(store)}
                   >
                     View
                   </Button>
