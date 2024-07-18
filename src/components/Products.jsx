@@ -82,19 +82,11 @@ const Products = () => {
     e.preventDefault();
     if( !storeId  ) return alert("No Store Id Found") ;
 
+    console.log(newProduct);
+
     const updatedProducts = [...products, newProduct];
     setProducts(updatedProducts);
-    setNewProduct({
-      image: '',
-      category: '',
-      name: '',
-      description: '',
-      quantity: '',
-      discount: '',
-      mrpPrice: '',
-      itemPrice: '',
-      sizes: [],
-    });
+  
     setNumberOfSizes(0);
   };
 
