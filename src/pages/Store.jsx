@@ -40,7 +40,7 @@ const Store = () => {
     try {
       if(storeDetails.phoneNumber.length != 10 || isNaN(storeDetails.phoneNumber)) return alert("Invalid Phone Number!!");
 
-      if( await getDocument(`Store/${storeDetails.storeName}`) ) return alert("Store already created!!");
+      if( await getDocument(`Store/${storeDetails.storeName}`) ) return alert("Store already exists !!");
   
       await createStore(user, storeDetails);
 
@@ -66,7 +66,7 @@ const Store = () => {
 
     if (!exists) return alert("User not created!!");
 
-    if (exists?.storeName) return alert("Store already created!!");
+    if (exists?.storeName) return alert("Store already exists !!");
 
     alert("Welcome");
 
@@ -131,7 +131,7 @@ useEffect(() => {
               <form onSubmit={handleStoreFormSubmit} className="store-form" noValidate>
                 <TextField
                   label="Phone Number"
-                  type="tel"
+                  type="number"
                   value={storeDetails.phoneNumber}
                   onChange={(e) =>
                     setStoreDetails({

@@ -29,13 +29,17 @@ export const createStore = async ( user , storeDetails) =>{
      storeDetails.storePhotoURL=user?.photoURL || ''
      storeDetails.userId=user?.id ;
      
-  await Promise.all([
-          setDocument(`Store/${storeDetails.storeName}`, storeDetails),
-          updateDocument(`Users/${user.id}`,{storeName: storeDetails.storeName })
-      ]).then((res) => {
-            alert("Store Created!!");                
-      }).catch((error) => {
-        console.log(error);
-      });
+     try {
+        await Promise.all([
+            setDocument(`Store/${storeDetails.storeName}`, storeDetails),
+            updateDocument(`Users/${user.id}`,{storeName: storeDetails.storeName })
+        ])
+        
+     } catch (error) {
+
+        throw new Error(error); 
+        
+     }
+
 
 }

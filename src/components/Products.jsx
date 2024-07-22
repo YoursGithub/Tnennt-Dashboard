@@ -14,19 +14,12 @@ import {
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { createProduct } from '../controller/ProductCreateController';
 const Products = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
-    image: '',
-    category: '',
-    name: '',
-    description: '',
-    quantity: '',
-    discount: '',
-    mrpPrice: '',
-    itemPrice: '',
-    sizes: [],
+
   });
   const [numberOfSizes, setNumberOfSizes] = useState(0);
 
@@ -34,60 +27,86 @@ const Products = () => {
 
   const location = useLocation();
   const  storeId  = location?.state?.storeId || null ;
+  const [Images , setImages] = useState([]);
 
-  useEffect(() => {
-  
-
-
-  }, []);
+  const ProductPrice = newProduct?.ProductMrpPrice - (newProduct?.ProductMrpPrice * newProduct?.ProductDiscount / 100).toFixed(2);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewProduct({ ...newProduct, [name]: value });
+    setNewProduct({ ...newProduct, [name]: value.toLowerCase() });
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNewProduct({ ...newProduct, image: reader.result });
-    };
     if (file) {
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const imageData = e.target.result;
+        const uniqueKey = Date.now();
+        setImages((prevImages) => [
+          ...prevImages,
+          { id: uniqueKey, data: imageData, name: file.name, file: file },
+        ]);
+      };
       reader.readAsDataURL(file);
     }
   };
 
   const handleCategoryChange = (e) => {
     const category = e.target.value.toLowerCase();
-    setNewProduct({ ...newProduct, category, sizes: [] });
-    setNumberOfSizes(0);
+    setNewProduct({ ...newProduct, 'ProductType' : category , sizes : [] });
   };
 
   const handleNumberOfSizesChange = (e) => {
-    const num = parseInt(e.target.value, 10);
-    setNumberOfSizes(num);
-    setNewProduct({
-      ...newProduct,
-      sizes: Array(num).fill({ size: '', price: '' }),
-    });
+    let num = parseInt(e.target.value, 10);
+    num = isNaN(num) ? 0 : num ;
+    if( num >= 0 )
+    {
+      setNumberOfSizes(num);
+      setNewProduct({
+        ...newProduct,
+        sizes: Array(num).fill({  }),
+      });
+
+    }
+  
   };
 
   const handleSizeChange = (index, field, value) => {
     const updatedSizes = [...newProduct.sizes];
     updatedSizes[index] = { ...updatedSizes[index], [field]: value };
+
+    if( updatedSizes[index]?.ProductDiscount && updatedSizes[index]?.ProductMrpPrice  )
+    {
+    updatedSizes[index] = { ...updatedSizes[index], 'ProductPrice': (updatedSizes[index]?.ProductMrpPrice - (updatedSizes[index]?.ProductDiscount * updatedSizes[index]?.ProductMrpPrice / 100)).toFixed(2) };
+
+
+    }
     setNewProduct({ ...newProduct, sizes: updatedSizes });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+
     e.preventDefault();
+
     if( !storeId  ) return alert("No Store Id Found") ;
 
-    console.log(newProduct);
+    if ( Images.length === 0) return alert("Insert Images");
 
-    const updatedProducts = [...products, newProduct];
-    setProducts(updatedProducts);
-  
-    setNumberOfSizes(0);
+      newProduct['ProductPrice'] = ProductPrice.toFixed(2);
+      newProduct['storeId'] = storeId ;
+
+
+    try {
+      await createProduct(Images , newProduct)
+
+      alert("Created")
+    } catch (error) {
+      
+      alert("Errorrr : " +  error.message)
+    }
+
   };
 
   const handleDeleteProduct = (index) => {
@@ -95,7 +114,7 @@ const Products = () => {
     setProducts(updatedProducts);
   };
 
-  const showSizesField = specialCategories.includes(newProduct.category.toLowerCase());
+  const showSizesField = specialCategories.includes(newProduct?.ProductType?.toLowerCase());
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -105,7 +124,7 @@ const Products = () => {
           Product List
         </Typography>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+          <Grid >
             <Paper elevation={3} sx={{ p: 3 }}>
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Add New Product
@@ -123,101 +142,157 @@ const Products = () => {
                     Upload Image
                   </Button>
                 </label>
-                {newProduct.image && (
-                  <img src={newProduct.image} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px', marginBottom: '16px' }} />
-                )}
+                  {Images.map((image) => (
+                                    <div
+                                      key={image.id}
+                                      className="border-[1px] rounded-[15px] border-[#848484] w-[14vw] h-[14vw] bg-cover bg-center bg-no-repeat flex justify-center items-center"
+                                      style={{
+                                        backgroundImage: `url(${image.data})`,
+                                      }} /> )
+                          )}
+          <br />
                 <TextField
                   fullWidth
-                  label="Product Category"
-                  name="category"
-                  value={newProduct.category}
+                  label="Product Type"
+                  name="ProductType"
+                  value={newProduct.ProductType}
                   onChange={handleCategoryChange}
                   sx={{ mb: 2 }}
+                  required
+                />
+                <TextField
+                  fullWidth
+                  label="Store Owner Category "
+                  name="StoreOwnerCategory"
+                  value={newProduct.StoreOwnerCategory}
+                  onChange={handleInputChange}
+                  sx={{ mb: 2 }}
+                  required
+
                 />
                 <TextField
                   fullWidth
                   label="Product Name"
-                  name="name"
-                  value={newProduct.name}
+                  name="ProductName"
+                  value={newProduct.ProductName}
                   onChange={handleInputChange}
+                  required
                   sx={{ mb: 2 }}
                 />
                 <TextField
                   fullWidth
                   label="Product Description"
-                  name="description"
-                  value={newProduct.description}
+                  name="ProductDescription"
+                  value={newProduct.ProductDescription}
                   onChange={handleInputChange}
                   multiline
                   rows={3}
                   sx={{ mb: 2 }}
+                  required
                 />
-                <TextField
-                  fullWidth
-                  label="Product Quantity"
-                  name="quantity"
-                  value={newProduct.quantity}
-                  onChange={handleInputChange}
-                  type="number"
-                  sx={{ mb: 2 }}
-                />
+               
                 {showSizesField && (
                   <>
                     <TextField
-                      fullWidth
                       label="Number of Sizes"
                       type="number"
                       value={numberOfSizes}
                       onChange={handleNumberOfSizesChange}
                       sx={{ mb: 2 }}
                     />
-                    {newProduct.sizes.map((size, index) => (
+                    {newProduct?.sizes && newProduct.sizes.map((size, index) => (
                       <Box key={index} sx={{ display: 'flex', gap: 2, mb: 2 }}>
                         <TextField
-                          label={`Size ${index + 1}`}
-                          value={size.size}
-                          onChange={(e) => handleSizeChange(index, 'size', e.target.value)}
+                          label={`Variation  ${index + 1}`}
+                          value={size['ProductVariations']}
+                          onChange={(e) => handleSizeChange(index, 'ProductVariations', e.target.value)}
                         />
-                        <TextField
-                          label={`Price for Size ${index + 1}`}
+                     
+                         <TextField
+                          label=" Quantity"
+                          name="ProductStockQuantity"
+                          value={size['ProductStockQuantity']}
+                          onChange={(e) => handleSizeChange(index, 'ProductStockQuantity', e.target.value)}
                           type="number"
-                          value={size.price}
-                          onChange={(e) => handleSizeChange(index, 'price', e.target.value)}
+                          sx={{ mb: 2 }}
+                          required
                         />
+                            <TextField
+                            label="Discount"
+                            name="ProductDiscount"
+                            value={size['ProductDiscount']}
+                            onChange={(e) => handleSizeChange(index, 'ProductDiscount', e.target.value)}
+                            type="number"
+                          required
+                          />
+                          <TextField
+                          label="MRP Price"
+                          name="ProductMrpPrice"
+                          value={size['ProductMrpPrice']}
+                          onChange={(e) => handleSizeChange(index, 'ProductMrpPrice', e.target.value)}
+                          type="number"
+                        required
+                        />
+                            <TextField
+                          label="Item Price"
+                          name="ProductPrice"
+                          value={ size['ProductPrice'] || 0}
+                          type="number"
+                        />
+                
+                
                       </Box>
                     ))}
                   </>
                 )}
+
+                {!showSizesField &&  (
+
+                  <>
+              <TextField
+                  fullWidth
+                  label="Product Quantity"
+                  name="ProductStockQuantity"
+                  value={newProduct.ProductStockQuantity}
+                  onChange={handleInputChange}
+                  type="number"
+                  sx={{ mb: 2 }}
+                  required
+                />
                 <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                   <TextField
                     label="Discount"
-                    name="discount"
-                    value={newProduct.discount}
+                    name="ProductDiscount"
+                    value={newProduct.ProductDiscount}
                     onChange={handleInputChange}
                     type="number"
+                  required
                   />
                   <TextField
                     label="MRP Price"
-                    name="mrpPrice"
-                    value={newProduct.mrpPrice}
+                    name="ProductMrpPrice"
+                    value={newProduct.ProductMrpPrice}
                     onChange={handleInputChange}
                     type="number"
+                  required
                   />
                   <TextField
                     label="Item Price"
-                    name="itemPrice"
-                    value={newProduct.itemPrice}
-                    onChange={handleInputChange}
+                    name="ProductPrice"
+                    value={ProductPrice}
                     type="number"
                   />
-                </Box>
+                </Box>                  
+                  </>
+                )}
+                
                 <Button type="submit" variant="contained" color="primary">
                   Add Product
                 </Button>
               </form>
             </Paper>
           </Grid>
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Product List
             </Typography>
@@ -254,7 +329,7 @@ const Products = () => {
                 </Grid>
               ))}
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </Box>
