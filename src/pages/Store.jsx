@@ -244,13 +244,13 @@ const Store = () => {
                           </Typography>
                         </CardTopContent>
                         <CardBottomContent>
-                          <Typography variant="body2" color="text.secondary" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                          <Typography variant="body2" className="text-center" color="text.secondary" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
                             Email: {store.storeEmail}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                          <Typography variant="body2" className="text-center" color="text.secondary" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
                             Category: {store.category}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                          <Typography variant="body2" className="text-center" color="text.secondary" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
                             Location: {store.location}
                           </Typography>
                         </CardBottomContent>

@@ -49,7 +49,7 @@ const Orders = () => {
     {/* Table */}
     <table className="w-full text-sm text-gray-300">
       <thead>
-        <tr className="border-b border-gray-700">
+        <tr className="border-b text-center border-gray-700">
           <th className="text-left p-2 font-normal text-gray-400"></th>
           <th className="text-left p-2 font-normal text-gray-400">Order</th>
           <th className="text-left p-2 font-normal text-gray-400">Customer</th>
@@ -118,7 +118,7 @@ const Orders = () => {
   </div>
 
         {/* Right sidebar */}
-        <aside className="w-80">
+        {/* <aside className="w-80">
           <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
             <h2 className="text-xs font-semibold mb-4 text-gray-500">RECEIPT OF GOODS</h2>
             <div className="text-3xl font-bold mb-4">$2.2m</div>
@@ -196,7 +196,7 @@ const Orders = () => {
               </div>
             </div>
           </div>
-        </aside>
+        </aside> */}
       </main>
     </div>
   );
