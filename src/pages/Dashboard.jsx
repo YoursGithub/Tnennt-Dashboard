@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Sidebar from '../components/Sidebar';
+import {Swiper, SwiperSlide} from 'swiper/react'
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
 
 function Dashboard() {
 
@@ -11,9 +15,7 @@ function Dashboard() {
   const [revenueTimePeriod, setRevenueTimePeriod] = useState('Today');
   const [currentSection, setCurrentSection] = useState('dashboard');
 
-  // Function to get data based on time period (you would implement this)
   const getDataForTimePeriod = (data, period) => {
-    // This is a placeholder. In a real application, you would fetch or filter data based on the period
     return data;
   };
 
@@ -53,15 +55,7 @@ function Dashboard() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-//   const navigate = useNavigate();
 
-//   useEffect(() => {
-//     // Check if user is authenticated (you might want to implement a more robust check)
-//     const isAuthenticated = localStorage.getItem('isAuthenticated');
-//     if (!isAuthenticated) {
-//       navigate('/login');
-//     }
-//   }, [navigate]);
   const dashboardData = {
     customers: 1234,
     orders: 567,
@@ -91,14 +85,74 @@ function Dashboard() {
   };
 
 
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [featuredStores, setFeaturedStores] = useState([]);
+
+  useEffect(() => {
+    const savedProducts = JSON.parse(localStorage.getItem('featuredProducts')) || [];
+    const savedStores = JSON.parse(localStorage.getItem('featuredStores')) || [];
+    setFeaturedProducts(savedProducts);
+    setFeaturedStores(savedStores);
+  }, []);
+
+  const handleFileUpload = (event, type) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newItem = { name: file.name, image: reader.result };
+        if (type === 'product') {
+          const updatedProducts = [...featuredProducts, newItem];
+          setFeaturedProducts(updatedProducts);
+          localStorage.setItem('featuredProducts', JSON.stringify(updatedProducts));
+        } else if (type === 'store') {
+          const updatedStores = [...featuredStores, newItem];
+          setFeaturedStores(updatedStores);
+          localStorage.setItem('featuredStores', JSON.stringify(updatedStores));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+
+  const [banners, setBanners] = useState([]);
+  const [showUploadForm, setShowUploadForm] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  useEffect(() => {
+    const storedBanners = JSON.parse(localStorage.getItem('banners') || '[]');
+    setBanners(storedBanners);
+  }, []);
+
+  const handleFileSelect = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleSaveBanner = () => {
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const newBanner = {
+          id: Date.now(),
+          imageUrl: e.target.result,
+        };
+        const updatedBanners = [...banners, newBanner];
+        setBanners(updatedBanners);
+        localStorage.setItem('banners', JSON.stringify(updatedBanners));
+        setShowUploadForm(false);
+        setSelectedFile(null);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+
   return (
     <div className={`flex h-screen ${darkMode ? 'dark' : ''}`}>
-      {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
-        {/* Navigation Bar */}
         <nav className=" bg-[#141519] shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
@@ -113,21 +167,18 @@ function Dashboard() {
                 </button>
               </div>
               <div className="flex items-center">
-                {/* Search Button */}
                 <button className="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:shadow-outline">
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </button>
 
-                {/* Notification Button */}
                 <button className="ml-4 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:shadow-outline">
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
                 </button>
 
-                {/* Dark Mode Toggle */}
                 <button 
                   onClick={() => setDarkMode(!darkMode)} 
                   className="ml-4 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:shadow-outline"
@@ -143,7 +194,6 @@ function Dashboard() {
                   )}
                 </button>
 
-                {/* Profile */}
                 <div className="ml-4 relative flex-shrink-0">
                   <div>
                     <button className="bg-gray-800 rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -156,15 +206,12 @@ function Dashboard() {
           </div>
         </nav>
 
-        {/* Main content area */}
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#141519]">
         {currentSection === 'dashboard' && (
           <div className="container mx-auto px-6 py-8">
             <h3 className="text-gray-700 dark:text-gray-200 text-3xl font-medium mb-6">Dashboard Overview</h3>
             
-            {/* Dashboard Boxes */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Customers */}
             <div className=" bg-[#21242D] shadow rounded-lg p-6">
               <div className="flex justify-between items-center mb-4">
                 <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Total Customers</h4>
@@ -181,7 +228,7 @@ function Dashboard() {
                 </select>
               </div>
               <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
-                {dashboardData.customers} {/* This should be updated based on the selected period */}
+                {dashboardData.customers} 
               </p>
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={getDataForTimePeriod(revenueData, customerTimePeriod)}>
@@ -194,7 +241,6 @@ function Dashboard() {
             </div>
 
 
-              {/* Orders */}
               <div className="bg-[#21242D] shadow rounded-lg p-6">
                 <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">Total Orders</h4>
                 <p className="text-3xl font-bold text-green-600 dark:text-green-400">{dashboardData.orders}</p>
@@ -224,7 +270,7 @@ function Dashboard() {
                 </select>
               </div>
               <p className="text-xl font-bold text-blue-600 dark:text-blue-400">
-                Total: ${dashboardData.revenue.total} {/* This should be updated based on the selected period */}
+                Total: ${dashboardData.revenue.total} 
               </p>
               <ResponsiveContainer width="100%" height={200}>
                 <AreaChart data={getDataForTimePeriod(revenueData, revenueTimePeriod)}>
@@ -237,7 +283,6 @@ function Dashboard() {
             </div>
 
 
-              {/* Products */}
               <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                 <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">Products</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">Total Products: {dashboardData.products.total}</p>
@@ -251,6 +296,119 @@ function Dashboard() {
             </div>
             </div>
  )}
+
+
+
+<div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 m-7">
+      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-4">Featured Products</h4>
+        <Swiper
+          modules={[Navigation]}
+          spaceBetween={10}
+          slidesPerView={2}
+          navigation
+          className="mb-4"
+        >
+          {featuredProducts.map((product, index) => (
+            <SwiperSlide key={index}>
+              <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded">
+                <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded" />
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{product.name}</p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <div className="mt-4">
+          <label htmlFor="upload-product" className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Upload Product
+            <input
+              id="upload-product"
+              type="file"
+              className="hidden"
+              onChange={(e) => handleFileUpload(e, 'product')}
+              accept="image/*"
+            />
+          </label>
+        </div>
+      </div>
+
+      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+        <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-4">Featured Stores</h4>
+        <Swiper
+          modules={[Navigation]}
+          spaceBetween={10}
+          slidesPerView={2}
+          navigation
+          className="mb-4"
+        >
+          {featuredStores.map((store, index) => (
+            <SwiperSlide key={index}>
+              <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded">
+                <img src={store.image} alt={store.name} className="w-full h-32 object-cover rounded" />
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{store.name}</p>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <div className="mt-4">
+          <label htmlFor="upload-store" className="cursor-pointer bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Upload Store
+            <input
+              id="upload-store"
+              type="file"
+              className="hidden"
+              onChange={(e) => handleFileUpload(e, 'store')}
+              accept="image/*"
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div className="relative p-6">
+      <h2 className="text-2xl ml-3 font-bold mb-4 text-white">Banners</h2>
+      
+      <div className="flex flex-wrap gap-4 mb-6">
+        {banners.map((banner) => (
+          <img 
+            key={banner.id} 
+            src={banner.imageUrl} 
+            alt="Banner" 
+            className="w-48 h-auto object-cover rounded shadow-md"
+          />
+        ))}
+      </div>
+      
+      <button 
+        className="absolute top-6 right-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+        onClick={() => setShowUploadForm(true)}
+      >
+        Create New Banner
+      </button>
+      
+      {showUploadForm && (
+        <div className="mt-6 p-4 bg-gray-100 rounded">
+          <input 
+            type="file" 
+            onChange={handleFileSelect} 
+            accept="image/*"
+            className="mb-4"
+          />
+          <button 
+            onClick={handleSaveBanner}
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+          >
+            Save Banner
+          </button>
+        </div>
+      )}
+    </div>
+  
+
+
+
           {/* Recent Orders Table */}
 <div className="mt-8">
   <h4 className="text-gray-700 border-gray-700 dark:text-gray-200 text-xl font-medium mb-4 ml-7">Recent Orders</h4>
