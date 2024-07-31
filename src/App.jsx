@@ -7,6 +7,8 @@ import Store from './pages/Store'
 import Products from './components/Products';
 import Middleman from './pages/Middleman';
 import ProductTracking from './pages/ProductTracking';
+import Featuredproducts from './pages/Featuredproducts';
+import FeaturedStore from './pages/FeaturedStore';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/middleman" element={<Middleman />} />
         <Route path="/producttrack" element={<ProductTracking />} />
+        <Route path="/featuredproducts" element={<Featuredproducts />} />
+        <Route path="/featuredstore" element={<FeaturedStore />} />
 
       </Routes>
     </Router>

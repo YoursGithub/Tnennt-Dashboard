@@ -85,36 +85,6 @@ function Dashboard() {
   };
 
 
-  const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [featuredStores, setFeaturedStores] = useState([]);
-
-  useEffect(() => {
-    const savedProducts = JSON.parse(localStorage.getItem('featuredProducts')) || [];
-    const savedStores = JSON.parse(localStorage.getItem('featuredStores')) || [];
-    setFeaturedProducts(savedProducts);
-    setFeaturedStores(savedStores);
-  }, []);
-
-  const handleFileUpload = (event, type) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newItem = { name: file.name, image: reader.result };
-        if (type === 'product') {
-          const updatedProducts = [...featuredProducts, newItem];
-          setFeaturedProducts(updatedProducts);
-          localStorage.setItem('featuredProducts', JSON.stringify(updatedProducts));
-        } else if (type === 'store') {
-          const updatedStores = [...featuredStores, newItem];
-          setFeaturedStores(updatedStores);
-          localStorage.setItem('featuredStores', JSON.stringify(updatedStores));
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
 
   const [banners, setBanners] = useState([]);
   const [showUploadForm, setShowUploadForm] = useState(false);
@@ -299,71 +269,8 @@ function Dashboard() {
 
 
 
-<div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 m-7">
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-4">Featured Products</h4>
-        <Swiper
-          modules={[Navigation]}
-          spaceBetween={10}
-          slidesPerView={2}
-          navigation
-          className="mb-4"
-        >
-          {featuredProducts.map((product, index) => (
-            <SwiperSlide key={index}>
-              <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded">
-                <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded" />
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{product.name}</p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <div className="mt-4">
-          <label htmlFor="upload-product" className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Upload Product
-            <input
-              id="upload-product"
-              type="file"
-              className="hidden"
-              onChange={(e) => handleFileUpload(e, 'product')}
-              accept="image/*"
-            />
-          </label>
-        </div>
-      </div>
 
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h4 className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-4">Featured Stores</h4>
-        <Swiper
-          modules={[Navigation]}
-          spaceBetween={10}
-          slidesPerView={2}
-          navigation
-          className="mb-4"
-        >
-          {featuredStores.map((store, index) => (
-            <SwiperSlide key={index}>
-              <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded">
-                <img src={store.image} alt={store.name} className="w-full h-32 object-cover rounded" />
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{store.name}</p>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-        <div className="mt-4">
-          <label htmlFor="upload-store" className="cursor-pointer bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-            Upload Store
-            <input
-              id="upload-store"
-              type="file"
-              className="hidden"
-              onChange={(e) => handleFileUpload(e, 'store')}
-              accept="image/*"
-            />
-          </label>
-        </div>
-      </div>
-    </div>
+
 
 
 
