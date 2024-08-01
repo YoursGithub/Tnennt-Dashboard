@@ -22,44 +22,43 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import { getDocument } from "../Database/db";
+import { doc , getDoc } from "firebase/firestore";
+import { db } from "../../firebase";
+
 
 const Featuredproducts = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [featuredStores, setFeaturedStores] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const getFeaturedProducts = async () =>{
+    
+    const products = await getDocument("Featured Products/featured-products")
+    
+    const storeDetails = [];
 
+    for (const ref of products.products) {
+
+      // FIXME: correct it
+      const docRef = doc(db,"products",ref);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        storeDetails.push(docSnap.data());
+      }
+    }
+
+    setFeaturedProducts(storeDetails);
+
+  }
+
+  console.log(featuredProducts);
   useEffect(() => {
-    const savedProducts =
-      JSON.parse(localStorage.getItem("featuredProducts")) || [];
-    const savedStores =
-      JSON.parse(localStorage.getItem("featuredStores")) || [];
-    setFeaturedProducts(savedProducts);
-    setFeaturedStores(savedStores);
+    getFeaturedProducts();
+
   }, []);
 
-  const handleFileUpload = (event, type) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newItem = { name: file.name, image: reader.result };
-        if (type === "product") {
-          const updatedProducts = [...featuredProducts, newItem];
-          setFeaturedProducts(updatedProducts);
-          localStorage.setItem(
-            "featuredProducts",
-            JSON.stringify(updatedProducts)
-          );
-        } else if (type === "store") {
-          const updatedStores = [...featuredStores, newItem];
-          setFeaturedStores(updatedStores);
-          localStorage.setItem("featuredStores", JSON.stringify(updatedStores));
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  
 
   return (
     <>
@@ -84,10 +83,11 @@ const Featuredproducts = () => {
             className="mb-4"
           >
             {featuredProducts.map((product, index) => (
+              <>
               <SwiperSlide key={index}>
                 <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded">
                   <img
-                    src={product.image}
+                    src={product?.imageUrls[0]}
                     alt={product.name}
                     className="w-full h-32 object-cover rounded"
                   />
@@ -96,23 +96,10 @@ const Featuredproducts = () => {
                   </p>
                 </div>
               </SwiperSlide>
+              </>
             ))}
           </Swiper>
-          <div className="mt-4">
-            <label
-              htmlFor="upload-product"
-              className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Upload Product
-              <input
-                id="upload-product"
-                type="file"
-                className="hidden"
-                onChange={(e) => handleFileUpload(e, "product")}
-                accept="image/*"
-              />
-            </label>
-          </div>
+
         </div>
       </div>
       </div>

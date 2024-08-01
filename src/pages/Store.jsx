@@ -27,7 +27,7 @@ import {
   createStore,
   getCreatedStores,
 } from "../controller/StoreCreateController";
-import { getDocument } from "../Database/db";
+import { getDocument , getDocuments } from "../Database/db";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(1),
@@ -80,14 +80,15 @@ const Store = () => {
   }, []);
 
   const getAllStores = async () => {
-    const result = await getCreatedStores();
+    const result =  await getDocuments("Stores");
     setStores(result);
+
+    console.log(result);
   };
 
   const handleDeleteStore = (index) => {
     const newStores = stores.filter((_, i) => i !== index);
     setStores(newStores);
-    localStorage.setItem("stores", JSON.stringify(newStores));
   };
 
   const handleStoreFormSubmit = async (e) => {
@@ -240,12 +241,12 @@ const Store = () => {
                             <StorefrontIcon sx={{ fontSize: 40 }} />
                           </Avatar>
                           <Typography variant="h6" gutterBottom>
-                            {store.storeName}
+                            {store.name}
                           </Typography>
                         </CardTopContent>
                         <CardBottomContent>
                           <Typography variant="body2" className="text-center" color="text.secondary" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
-                            Email: {store.storeEmail}
+                            Email: {store.email}
                           </Typography>
                           <Typography variant="body2" className="text-center" color="text.secondary" sx={{ color: "rgba(255, 255, 255, 0.7)" }}>
                             Category: {store.category}
