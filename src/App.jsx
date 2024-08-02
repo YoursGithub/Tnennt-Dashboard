@@ -9,6 +9,7 @@ import Middleman from './pages/Middleman';
 import ProductTracking from './pages/ProductTracking';
 import Featuredproducts from './pages/Featuredproducts';
 import FeaturedStore from './pages/FeaturedStore';
+import Banner from './pages/Banner';
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
         <Route path="/producttrack" element={<ProductTracking />} />
         <Route path="/featuredproducts" element={<Featuredproducts />} />
         <Route path="/featuredstore" element={<FeaturedStore />} />
-
+        <Route path="/banners" element={<Banner />} />
       </Routes>
     </Router>
   );
