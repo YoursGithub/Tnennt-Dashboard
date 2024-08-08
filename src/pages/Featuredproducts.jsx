@@ -71,8 +71,8 @@ const Featuredproducts = () => {
 
 
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 m-7">
-        <div className="bg-white  shadow-xl rounded-lg p-6">
-          <h4 className="text-2xl font-semibold mb-4">
+        <div className="bg-[#141519] w-[700px] shadow-xl rounded-lg p-6">
+          <h4 className="text-2xl font-semibold mb-4 text-white">
             Featured Products
           </h4>
           <Swiper
