@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Navbar from "../components/Navbar";
+
+
 import {
   Box,
   Paper,
@@ -120,6 +123,9 @@ const Products = () => {
     <ThemeProvider theme={darkTheme}>
       <Box sx={{ display: 'flex', bgcolor: '#141519', minHeight: '100vh' }}>
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
+
+<Navbar />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Typography variant="h4" sx={{ mb: 4, color: 'white' }}>
             Product List
@@ -291,6 +297,7 @@ const Products = () => {
             </Grid>
           </Grid>
         </Box>
+        </div>
       </Box>
     </ThemeProvider>
   );

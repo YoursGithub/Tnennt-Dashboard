@@ -22,6 +22,7 @@ import Sidebar from "../components/Sidebar";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import Navbar from "../components/Navbar";
 import {
   checkEmail,
   createStore,
@@ -131,8 +132,12 @@ const Store = () => {
   };
 
   return (
+    
     <Box sx={{ display: "flex", backgroundColor: "#141519", minHeight: "100vh" }}>
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
+
+<Navbar /> 
       <Box component="main" sx={{ flexGrow: 1, p: 3, position: "relative" }}>
         {!showStoreForm && (
           <StyledButton
@@ -283,6 +288,7 @@ const Store = () => {
           </Grid>
         </Box>
       </Box>
+      </div>
     </Box>
   );
 };

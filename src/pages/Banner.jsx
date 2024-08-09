@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+
 
 const Banner = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -44,6 +46,10 @@ const Banner = () => {
         <div>
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
     </div>
+
+   <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
+
+    <Navbar /> 
     
       <div className="relative p-6">
         <h2 className="text-2xl ml-3 font-bold mb-4 text-white">Banners</h2>
@@ -82,6 +88,7 @@ const Banner = () => {
             </button>
           </div>
         )}
+      </div>
       </div>
       </div>
     </>

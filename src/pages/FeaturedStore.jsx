@@ -3,6 +3,8 @@ import Sidebar from "../components/Sidebar";
 import { getDocument } from "../Database/db";
 import { getDoc , doc , collection } from "firebase/firestore";
 import { db } from "../../firebase";
+import Navbar from "../components/Navbar";
+
 
 const FeaturedStore = () => {
   const [featuredStores, setFeaturedStores] = useState([]);
@@ -39,6 +41,10 @@ const FeaturedStore = () => {
       <div>
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </div>
+
+      <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
+
+    <Navbar />
       
       <div className="flex-grow bg-white shadow rounded-lg p-4 sm:p-6 m-4">
         <h4 className="text-gray-900 text-xl font-semibold mb-4">Featured Stores</h4>
@@ -59,6 +65,7 @@ const FeaturedStore = () => {
         </div>
      
       </div>
+    </div>
     </div>
   );
 };

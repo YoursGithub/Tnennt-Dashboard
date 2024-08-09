@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FiSearch, FiChevronDown, FiMoreHorizontal, FiMenu } from 'react-icons/fi';
 import Sidebar from '../components/Sidebar';
+import Navbar from "../components/Navbar";
+
 
 const Orders = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -9,6 +11,9 @@ const Orders = () => {
     <div className="flex h-screen bg-[#001d3d]">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+
+      <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
+      <Navbar />
 
       {/* Main content */}
       <main className="flex-1 p-8 flex bg-gray-900">
@@ -198,6 +203,7 @@ const Orders = () => {
           </div>
         </aside> */}
       </main>
+    </div>
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import CustomerTable from '../components/CustomersTable';
 import Sidebar from '../components/Sidebar';
+import Navbar from "../components/Navbar";
+
 
 const CustomersPage = () => {
   const customers = [
@@ -62,6 +64,10 @@ const CustomersPage = () => {
   return (
     <div className={`flex h-screen overflow-hidden ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} darkMode={darkMode} />
+
+      <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
+
+    <Navbar />
       
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className={`flex items-center justify-between px-6 py-4 ${darkMode ? 'bg-[#141519]' : 'bg-white'} shadow-md`}>
@@ -99,6 +105,7 @@ const CustomersPage = () => {
           </div>
         </main>
       </div>
+    </div>
     </div>
   );
 };

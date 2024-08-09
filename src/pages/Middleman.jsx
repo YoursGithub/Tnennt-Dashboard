@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar'
+import Navbar from "../components/Navbar";
+
 
 function MiddlemanSection() {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -23,6 +25,9 @@ function MiddlemanSection() {
     <div className="flex bg-black text-white min-h-screen">
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       
+      <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
+      <Navbar />
+
       <div className="flex-1 p-10 "> {/* ml-64 assumes sidebar width is 16rem (256px) */}
         <h2 className="text-2xl font-bold mb-6">Middleman Section</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -64,6 +69,7 @@ function MiddlemanSection() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

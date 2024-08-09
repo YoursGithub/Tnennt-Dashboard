@@ -18,6 +18,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -68,8 +69,9 @@ const Featuredproducts = () => {
           <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         </div>
 
+        <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
 
-
+    <Navbar />
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 m-7">
         <div className="bg-[#141519] w-[700px] shadow-xl rounded-lg p-6">
           <h4 className="text-2xl font-semibold mb-4 text-white">
@@ -101,6 +103,7 @@ const Featuredproducts = () => {
           </Swiper>
 
         </div>
+      </div>
       </div>
       </div>
     </>

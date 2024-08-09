@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
+import Navbar from "../components/Navbar";
+
 import { FiSearch, FiChevronDown, FiMoreHorizontal, FiMenu } from 'react-icons/fi';
 
 
@@ -62,6 +64,10 @@ const Dashboard = () => {
     <div className='flex'>
     <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
+    <div className="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-800">
+
+    <Navbar /> 
+
     <div className="container mx-auto p-4 bg-[#141519]">
 
     <h1 className='text-white font-bold text-2xl mt-4'>All Orders  &nbsp; <span className='text-white'>&bull;</span></h1>
@@ -79,6 +85,7 @@ const Dashboard = () => {
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
+    </div>
     </div>
     </div>
 
